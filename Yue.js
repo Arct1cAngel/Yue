@@ -14,7 +14,6 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-
 client.on('ready', () => {
 process.stdout.write('\x1Bc') // clears the console
 BotState.sync({alter: true}).then(() => {
