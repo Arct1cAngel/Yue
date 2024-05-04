@@ -56,3 +56,5 @@ Beta.2.1 (May 4, 2024)
 
 Increased cost of marriage from $0 to $1000
 Increased cost of Divorce from $0 to $2000
+Fixed an issue where Yue would crash if the User
+    used the kill command and Yue failed to message the User
