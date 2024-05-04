@@ -429,8 +429,7 @@ client.on('interactionCreate', async interaction => {
               interaction.reply(`This user is already in a relationship!`);
             }
           }).catch(async (error) => { // Target not found
-            await interaction.editReply({content: `Could not propose to ${Target} because they don't have an account. Use /profile to make an account!`});
-            console.log(error);
+            await interaction.reply({content: `Could not propose to ${Target} because they don't have an account. Use /profile to make an account!`});
           });
           break;
         case "divorce":
