@@ -85,7 +85,13 @@ const mode = new SlashCommandBuilder()
 
   const Help = new SlashCommandBuilder()
   .setName("help")
-  .setDescription("Get information regarding Yue and how she works.");
+  .setDescription("Get information regarding Yue and how she works.")
+  .addStringOption(option =>
+    option
+    .setName("category")
+    .setDescription("Shortcut to command list.")
+    .addChoices({name: "commands", value: "Commands"})
+  );
 
   const Daily = new SlashCommandBuilder()
   .setName("daily")

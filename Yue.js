@@ -6,7 +6,7 @@ const config = require("./config.json");
 const BotState = require("./models/BotState");
 const Suggestion = require('./models/Suggestions');
 const Profile = require('./models/Profile');
-const YueVersion = "Beta.2";
+const YueVersion = "Beta.2.1";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) // Delay 1s-> await sleep(1000);
 
 //Random number generator (getRandomInt(5) returns num from 1-5)
@@ -86,12 +86,15 @@ client.on('interactionCreate', async interaction => {
     case "kill":
       var DmAble = true;
       var Target = interaction.options.getUser('target');
-      interaction.reply(`Okay, ill go out back and put <@${Target.id}> down like a dog.`);
-      await client.users.cache.get(Target.id).send(":boom: :gun: You're dead :)").catch(error => {
-        interaction.user.send("They've got barracades, I can't break through. I'm sorry to have failed you, boss. (This user has blocked me or has dms turned off)")
+      await interaction.reply(`Okay, ill go out back and put <@${Target.id}> down like a dog.`);
+      await client.users.cache.get(Target.id).send(":boom: :gun: You're dead :)").catch(async error => {
+        await interaction.user.editReply("They've got barracades, I can't break through. I'm sorry to have failed you, boss. (This user has blocked me or has dms turned off)")
         DmAble = false;
+        return;
+        }).catch(error => {
+          console.log(error);
         });
-      if (DmAble == true) interaction.user.send("The job is done, boss. You won't hear of them again.");
+      if (DmAble == true) interaction.user.send("The job is done, boss. You won't hear of them again.").catch(error => {interaction.editReply("Your dms seem to be off, boss. However I killed them anyway for you.")});
       break;
     case "refresh":
       const sent = interaction.deferReply("Please wait . . .");
@@ -183,7 +186,7 @@ client.on('interactionCreate', async interaction => {
           return Profile.findByPk(interaction.user.id);
         }).then((profile) => {
           if (profile.Balance - cost < 0) {
-          interaction.reply("You lack the fund to register to this class, go beg on the street you hobo.");
+          interaction.reply("You lack the funds to register to this class, go beg on the street you hobo.");
             return;
           } else {
           Profile.update(
@@ -201,6 +204,7 @@ client.on('interactionCreate', async interaction => {
         });
         break;
       case "help":
+        const helpCategory = interaction.options.getString("category");
         var totalSeconds = (client.uptime / 1000);
         var days = Math.floor(totalSeconds / 86400);
         totalSeconds %= 86400;
@@ -208,7 +212,14 @@ client.on('interactionCreate', async interaction => {
         totalSeconds %= 3600;
         var minutes = Math.floor(totalSeconds / 60);
         var seconds = Math.floor(totalSeconds % 60);
+        var shortcut = false;
 
+      if (helpCategory == "Commands") {
+        Title = `Master Command List`;
+        Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\nCost $1000\n❤️‍🔥 **Divorce:** Divorce your spouse.\nCost $2000\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
+        shortcut = true;
+      }
+        if (!shortcut) {
         const Bot = new ButtonBuilder()
         .setCustomId('bot')
         .setLabel('Bot Help')
@@ -251,7 +262,7 @@ client.on('interactionCreate', async interaction => {
               .setDescription('Details on how to obtain and lose money.')
               .setValue('economy'),
           );
-          const Help = new EmbedBuilder()
+          var Help = new EmbedBuilder()
           Help.setTitle(`${interaction.client.user.username}`);
           Help.setThumbnail(interaction.client.user.avatarURL());
           Help.setFooter({text: `Yue Version: ${YueVersion}`});
@@ -287,7 +298,7 @@ client.on('interactionCreate', async interaction => {
                 break;
               case "commands":
                 Title = `Master Command List`;
-                Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\n❤️‍🔥 **Divorce:** Divorce your spouse.\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
+                Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\nCost $1000\n❤️‍🔥 **Divorce:** Divorce your spouse.\nCost $2000\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
                 break;
               case "economy":
                 Title = `Economy Details`;
@@ -300,7 +311,14 @@ client.on('interactionCreate', async interaction => {
             Help.setThumbnail(interaction.client.user.avatarURL());
             Help.setDescription(Description);
             await i.update({embeds: [Help]});
-          })
+          });
+        }
+        var Help = new EmbedBuilder()
+        Help.setTitle(`${interaction.client.user.username}`);
+        Help.setThumbnail(interaction.client.user.avatarURL());
+        Help.setFooter({text: `Yue Version: ${YueVersion}`});
+        Help.setDescription(Description);
+        interaction.reply({embeds: [Help]});
         break;
         case "daily":
           var RandomNumber = getRandomInt(100); // Random number from 1-100
@@ -372,11 +390,19 @@ client.on('interactionCreate', async interaction => {
         case "marry":
           var Target = interaction.options.getUser('target'); // Targetting user selected in the slash command
           var CanMarry = true;
+          var cost = 1000;
+          var Balance;
           await Profile.sync({alter: true}).then(() => {
             return Profile.findByPk(interaction.user.id); // Find account owned by User
           }).then(async (profile) => {
+            Balance = profile.Balance;
             if (profile.MarriedTo) {
               interaction.reply(`You're already married! Don't be a cheater.`); // If User is already married
+              CanMarry = false;
+              return;
+            }
+            if (profile.Balance - cost < 0) { // Check if User has enough money to marry
+              interaction.reply("You lack the funds to propose, it costs $1000 to propose to somebody.");
               CanMarry = false;
               return;
             }
@@ -415,7 +441,7 @@ client.on('interactionCreate', async interaction => {
             ButtonCollector.on('collect', async (i) => {
               switch (i.customId) {
                 case "yes":
-                  await Profile.update({MarriedTo: Target.id},{where: {id: interaction.user.id}}); // Marry User to Target
+                  await Profile.update({MarriedTo: Target.id, Balance: Balance - cost},{where: {id: interaction.user.id}}); // Marry User to Target
                   await Profile.update({MarriedTo: interaction.user.id},{where: {id: Target.id}}); // Marry Target to User
                   interaction.editReply({content: `Congratulations! <@${interaction.user.id}> and <@${Target.id}> are now married!`, components: []});
                   break;
@@ -433,18 +459,25 @@ client.on('interactionCreate', async interaction => {
           });
           break;
         case "divorce":
-          var Single = true;
+          var canDivorce = false;
+          var cost = 2000;
+          var Balance;
           await Profile.sync({alter: true}).then(() => {
             return Profile.findByPk(interaction.user.id); // Find account owned by User
           }).then(async (profile) => {
+            Balance = profile.Balance;
             if (!profile.MarriedTo) {
               interaction.reply(`You aren't married to anybody!`);
               return;
             } else {
-              Single = false;
+              if (profile.Balance - cost < 0) { // Check if User has enough money to marry
+                interaction.reply("You lack the funds to file a divorce, it costs $2000 to divorce your spouse.");
+                canDivorce = false;
+                return;
+              } else { canDivorce = true; }
             }
           });
-          if (Single == false) {
+          if (canDivorce == true) {
           var Yes = new ButtonBuilder() // Divorce
           .setCustomId('yes')
           .setLabel('Yes')
@@ -478,7 +511,7 @@ client.on('interactionCreate', async interaction => {
               case "yes":
                 interaction.editReply({content: `You and <@${profile.MarriedTo}> are nolonger married.`, components: []});
                 await Profile.update({MarriedTo: null},{where: {id: profile.MarriedTo}}); // Divorce User from Spouse
-                await Profile.update({MarriedTo: null},{where: {id: interaction.user.id}}); // Divorce Spouse from User
+                await Profile.update({MarriedTo: null, Balance: Balance - cost},{where: {id: interaction.user.id}}); // Divorce Spouse from User
                 break;
               case "no":
                 interaction.editReply({content: `Don't play with feelings like that.`, components: []});
