@@ -99,6 +99,20 @@ const mode = new SlashCommandBuilder()
   .setName("test")
   .setDescription("For testing purposes.");
 
+  const Marry = new SlashCommandBuilder()
+  .setName("marry")
+  .setDescription("Marry another user.")
+  .addUserOption((option) =>
+  option
+    .setName("target")
+    .setDescription("Who are you proposing to?")
+    .setRequired(true)
+  );
+
+  const Divorce = new SlashCommandBuilder()
+  .setName("divorce")
+  .setDescription("Divorce your spouse.");
+
 const commands = [
   profile.toJSON(),
   kill.toJSON(),
@@ -111,7 +125,9 @@ const commands = [
   Help.toJSON(),
   Daily.toJSON(),
   Reset.toJSON(),
-  Test.toJSON()
+  Test.toJSON(),
+  Marry.toJSON(),
+  Divorce.toJSON()
 ];
   
 const rest = new REST({ version: '10' }).setToken(config.Token);

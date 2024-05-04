@@ -21,7 +21,10 @@ const Profile = sequelize.define("Profile", {
         type: Sequelize.INTEGER,
         primaryKey: true
     },
-    timestamps: false,
+    MarriedTo: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
 },
 {
     timestamps: false,

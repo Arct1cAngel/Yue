@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder, ButtonStyle, User, Component, ComponentType, messageLink} = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, ActionRowBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ButtonBuilder, ButtonStyle, User, Component, ComponentType, messageLink, italic} = require('discord.js');
 const packageJSON = require("./package.json"); //Using Data from Package.json
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const { Database } = require('sqlite3');
@@ -6,7 +6,7 @@ const config = require("./config.json");
 const BotState = require("./models/BotState");
 const Suggestion = require('./models/Suggestions');
 const Profile = require('./models/Profile');
-const YueVersion = "Alpha.6";
+const YueVersion = "Beta.2";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) // Delay 1s-> await sleep(1000);
 
 //Random number generator (getRandomInt(5) returns num from 1-5)
@@ -38,34 +38,45 @@ BotState.sync({alter: true}).then(() => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
+  Profile.upsert(
+    {
+      Username: interaction.user.username,
+      id: interaction.user.id
+    },
+    {where: {id: interaction.user.id}}
+  )
+
   switch(interaction.commandName) {
     case "profile":
       var Target = interaction.options.getUser('target');
       if (!Target) Target = interaction.user;
-        Profile.upsert(
-          {
-            Username: Target.username,
-            id: Target.id
-          },
-          {where: {id: Target.id}}
-        )
+      // If Target does not own an account, create one
+      Profile.upsert(
+        {
+          Username: Target.username,
+          id: Target.id
+        },
+        {where: {id: Target.id}}
+      )
       Profile.sync({alter: true}).then(() => {
         return Profile.findByPk(Target.id);
       }).then((profile) => {
+        var Spouse = `<@${profile.MarriedTo}>`;
+        if (Spouse == `<@null>`) Spouse = `Nobody`;
         const profiledata = new EmbedBuilder()
         profiledata.setTitle(`${Target.username}`);
         profiledata.setThumbnail(Target.avatarURL());
         switch (Target.id) {
           case config.Arctic:
-            profiledata.setDescription(`${profile.Class} class\n\nBalance: $${profile.Balance}\nCreator of Yue`);
+            profiledata.setDescription(`${profile.Class} class\n\nBalance: $${profile.Balance}\nCreator of Yue\nMarried to: ${Spouse}`);
             profiledata.setColor(0x00ffaa);
             break;
           case config.Yue:
-            profiledata.setDescription(`God class\n\nBalance: Infinity\nCoolest and Richest Bot :sunglasses:`)
+            profiledata.setDescription(`God class\n\nBalance: Infinity\nCoolest and Richest Bot :sunglasses:\nMarried to: ${Spouse}`);
             profiledata.setColor(0xffcc00);
             break;
           default:
-            profiledata.setDescription(`${profile.Class} class\n\nBalance: $${profile.Balance}\nYou're kind of poor aren't you? :smirk:`)
+            profiledata.setDescription(`${profile.Class} class\n\nBalance: $${profile.Balance}\nYou're kind of poor aren't you? :smirk:\nMarried to: ${Spouse}`);
             profiledata.setColor(0x5000FF);
             break;
         }
@@ -138,7 +149,7 @@ client.on('interactionCreate', async interaction => {
           interaction.reply(`Added $${Amount} to ${Target}'s balance!`);
           console.log(`Added $${Amount} to ${profile.Username.charAt(0).toUpperCase() + profile.Username.slice(1)}'s balance!`);
         }).catch(error => {
-          interaction.reply(`Could not add to ${Target}'s balance. Tell them to do /profile to set up an account!`);
+          interaction.reply(`Could not add to ${Target}'s balance because they don't have an account. Use /profile to make an account!`);
         });
         } else {
           interaction.reply("You don't have access to this command!");
@@ -186,7 +197,7 @@ client.on('interactionCreate', async interaction => {
           console.log(`Updated ${profile.Username.charAt(0).toUpperCase() + profile.Username.slice(1)}'s class to: ${ClassChoice}`);
         }
         }).catch(error => {
-          interaction.reply(`Could not register to a class. Use /profile to set up an account!`);
+          interaction.reply(`Could not register to a class. Message Arctic_Angel for assistance.`);
         });
         break;
       case "help":
@@ -218,7 +229,7 @@ client.on('interactionCreate', async interaction => {
         const ButtonCollector = reply.createMessageComponentCollector({
           componentType: ComponentType.Button,
           filter: collectorFilter,
-          time: 30_000 //Button reads for 15s
+          time: 30_000 //Button reads for 30s
         });
 
         //Upon value taken from button
@@ -250,7 +261,7 @@ client.on('interactionCreate', async interaction => {
               await i.update({embeds: [Help]});
               return;
             case "yueOS":
-              Help.setDescription(`Made by Arctic_Angel\n=============================\nUse /profile to register!\n\nSelect one of the options\nbelow to learn more . . .\n=============================\n\n\nYue Version: ${YueVersion}`);
+              Help.setDescription(`Made by Arctic_Angel\n=============================\n\nSelect one of the options\nbelow to learn more . . .\n=============================\n\n\nYue Version: ${YueVersion}`);
               break;
           }
 
@@ -262,7 +273,7 @@ client.on('interactionCreate', async interaction => {
           const SelectionCollector = reply.createMessageComponentCollector({
             componentType: ComponentType.StringSelect,
             filter: collectorFilter,
-            time: 30_000 //Selection reads for 15s
+            time: 30_000 //Selection reads for 30s
           })
 
           //Upon value taken from selection menu
@@ -276,7 +287,7 @@ client.on('interactionCreate', async interaction => {
                 break;
               case "commands":
                 Title = `Master Command List`;
-                Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
+                Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\n❤️‍🔥 **Divorce:** Divorce your spouse.\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
                 break;
               case "economy":
                 Title = `Economy Details`;
@@ -341,7 +352,7 @@ client.on('interactionCreate', async interaction => {
               interaction.reply(`Daily Claimed!${Reply} **$${daily + Bonus}** added to your daily paycheque! Your new balance is: __**$${profile.Balance + daily + Bonus}**__`);
             }
           }).catch(error => {
-            interaction.reply(`Could not claim daily. Use /profile to set up an account!`);
+            interaction.reply(`Could not claim daily. Message Arctic_Angel for assistance.`);
             console.log(error);
           });
           break;
@@ -356,6 +367,128 @@ client.on('interactionCreate', async interaction => {
           interaction.reply(`Daily has been reset for all users.`)
         } else {
           interaction.reply("You don't have access to this command!");
+        }
+          break;
+        case "marry":
+          var Target = interaction.options.getUser('target'); // Targetting user selected in the slash command
+          var CanMarry = true;
+          await Profile.sync({alter: true}).then(() => {
+            return Profile.findByPk(interaction.user.id); // Find account owned by User
+          }).then(async (profile) => {
+            if (profile.MarriedTo) {
+              interaction.reply(`You're already married! Don't be a cheater.`); // If User is already married
+              CanMarry = false;
+              return;
+            }
+          });
+          if (!CanMarry) return; // If User cannot marry, cancel command
+
+          var Yes = new ButtonBuilder() // "I do"
+          .setCustomId('yes')
+          .setLabel('I do.')
+          .setEmoji('💒')
+          .setStyle(ButtonStyle.Success);
+
+          var No = new ButtonBuilder() // "I don't"
+          .setCustomId('no')
+          .setLabel("I'm sorry I do not.")
+          .setEmoji('💔')
+          .setStyle(ButtonStyle.Primary);
+
+          await Profile.sync({alter: true}).then(() => {
+            return Profile.findByPk(Target.id); // Find account owned by Target
+          }).then(async (profile) => { // Target found
+            if (profile.MarriedTo == null) { // Target is not married
+              var reply = await interaction.reply({content: `<@${Target.id}>, <@${interaction.user.id}> is proposing to you! Do you take them as your spouse? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
+              
+            // Only take selection from Target
+            var collectorFilter = i => i.user.id === Target.id;
+
+            // Collect value from button
+            var ButtonCollector = reply.createMessageComponentCollector({
+              componentType: ComponentType.Button,
+              filter: collectorFilter,
+              time: 30_000 //Button reads for 30s
+            });
+
+            // On button pressed:
+            ButtonCollector.on('collect', async (i) => {
+              switch (i.customId) {
+                case "yes":
+                  await Profile.update({MarriedTo: Target.id},{where: {id: interaction.user.id}}); // Marry User to Target
+                  await Profile.update({MarriedTo: interaction.user.id},{where: {id: Target.id}}); // Marry Target to User
+                  interaction.editReply({content: `Congratulations! <@${interaction.user.id}> and <@${Target.id}> are now married!`, components: []});
+                  break;
+                case "no":
+                  interaction.editReply({content: `I'm terribly sorry. But, <@${Target.id}> declined your proposal.`, components: []});
+                  break;
+              }
+            });
+
+            } else { // Already married
+              interaction.reply(`This user is already in a relationship!`);
+            }
+          }).catch(async (error) => { // Target not found
+            await interaction.editReply({content: `Could not propose to ${Target} because they don't have an account. Use /profile to make an account!`});
+            console.log(error);
+          });
+          break;
+        case "divorce":
+          var Single = true;
+          await Profile.sync({alter: true}).then(() => {
+            return Profile.findByPk(interaction.user.id); // Find account owned by User
+          }).then(async (profile) => {
+            if (!profile.MarriedTo) {
+              interaction.reply(`You aren't married to anybody!`);
+              return;
+            } else {
+              Single = false;
+            }
+          });
+          if (Single == false) {
+          var Yes = new ButtonBuilder() // Divorce
+          .setCustomId('yes')
+          .setLabel('Yes')
+          .setEmoji('❤️‍🔥')
+          .setStyle(ButtonStyle.Danger);
+
+          var No = new ButtonBuilder() // Stay married
+          .setCustomId('no')
+          .setLabel("No")
+          .setEmoji('❤️')
+          .setStyle(ButtonStyle.Primary);
+
+          await Profile.sync({alter: true}).then(() => {
+            return Profile.findByPk(interaction.user.id); // Find account owned by User
+          }).then(async (profile) => {
+          var reply = await interaction.reply({content: `Are you sure you want to divorce <@${profile.MarriedTo}>? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
+          
+          // Only take selection from User
+          var collectorFilter = i => i.user.id === interaction.user.id;
+
+          // Collect value from button
+          var ButtonCollector = reply.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+            filter: collectorFilter,
+            time: 30_000 //Button reads for 30s
+          });
+
+          // On button pressed:
+          ButtonCollector.on('collect', async (i) => {
+            switch (i.customId) {
+              case "yes":
+                interaction.editReply({content: `You and <@${profile.MarriedTo}> are nolonger married.`, components: []});
+                await Profile.update({MarriedTo: null},{where: {id: profile.MarriedTo}}); // Divorce User from Spouse
+                await Profile.update({MarriedTo: null},{where: {id: interaction.user.id}}); // Divorce Spouse from User
+                break;
+              case "no":
+                interaction.editReply({content: `Don't play with feelings like that.`, components: []});
+                break;
+            }
+          });
+          });
+        } else {
+          return;
         }
           break;
         case "test":

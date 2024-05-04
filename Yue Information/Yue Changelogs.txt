@@ -46,3 +46,8 @@ Added uptime to help command and refresh command
 Beta.1 (May 2, 2024)
 
 Yue now runs on a raspberry pi 4 24/7!
+
+Beta.2 (May 3, 2024)
+
+Added marriage command
+Added divorce command
