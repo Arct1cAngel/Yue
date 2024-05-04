@@ -15,14 +15,15 @@ Wiped profile data
 
 Alpha.3 (Apr 26, 2024)
 
-Changed yue's startup message to only run when in casual mode
-and not send in developement mode
+Changed Yue's startup message to only run when in casual mode
+    and not send in developement mode
 Added suggest command
 Added update_balance command
 Added richest command
 Added class command
 Wiped profile data
-Fixed an issue where Yue would crash if dms were turned off or blocked
+Fixed an issue where Yue would crash if dms 
+    were turned off or blocked
 Added permissions to mode and give commands
 
 Alpha.4 (Apr 29, 2024)
@@ -56,5 +57,5 @@ Beta.2.1 (May 4, 2024)
 
 Increased cost of marriage from $0 to $1000
 Increased cost of Divorce from $0 to $2000
-Fixed an issue where Yue would crash if the User
-    used the kill command and Yue failed to message the User
+Fixed an issue in kill command where Yue 
+    would crash if dms were turned off or blocked
