@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits, EmbedBuilder, ActivityType, ActionRowBuilder,
 const packageJSON = require("./package.json"); //Using Data from Package.json
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const { Database } = require('sqlite3');
+const fs = require('fs')
 const config = require("./config.json");
 const BotState = require("./models/BotState");
 const Suggestion = require('./models/Suggestions');
@@ -36,6 +37,16 @@ BotState.sync({alter: true}).then(() => {
 });
 
 client.on('interactionCreate', async interaction => {
+
+  // Client uptime in days, hours, minutes, and seconds
+  var totalSeconds = (client.uptime / 1000);
+  var days = Math.floor(totalSeconds / 86400);
+  totalSeconds %= 86400;
+  var hours = Math.floor(totalSeconds / 3600);
+  totalSeconds %= 3600;
+  var minutes = Math.floor(totalSeconds / 60);
+  var seconds = Math.floor(totalSeconds % 60);
+
   if (!interaction.isChatInputCommand()) return;
 
   Profile.upsert(
@@ -88,7 +99,7 @@ client.on('interactionCreate', async interaction => {
       var Target = interaction.options.getUser('target');
       await interaction.reply(`Okay, ill go out back and put <@${Target.id}> down like a dog.`);
       await client.users.cache.get(Target.id).send(":boom: :gun: You're dead :)").catch(async error => {
-        await interaction.user.editReply("They've got barracades, I can't break through. I'm sorry to have failed you, boss. (This user has blocked me or has dms turned off)")
+        await interaction.editReply("They've got barracades, I can't break through. I'm sorry to have failed you, boss. (This user has blocked me or has dms turned off)")
         DmAble = false;
         return;
         }).catch(error => {
@@ -204,121 +215,62 @@ client.on('interactionCreate', async interaction => {
         });
         break;
       case "help":
-        const helpCategory = interaction.options.getString("category");
-        var totalSeconds = (client.uptime / 1000);
-        var days = Math.floor(totalSeconds / 86400);
-        totalSeconds %= 86400;
-        var hours = Math.floor(totalSeconds / 3600);
-        totalSeconds %= 3600;
-        var minutes = Math.floor(totalSeconds / 60);
-        var seconds = Math.floor(totalSeconds % 60);
-        var shortcut = false;
-
-      if (helpCategory == "Commands") {
-        Title = `Master Command List`;
-        Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\nCost $1000\n❤️‍🔥 **Divorce:** Divorce your spouse.\nCost $2000\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
-        shortcut = true;
-      }
-        if (!shortcut) {
-        const Bot = new ButtonBuilder()
-        .setCustomId('bot')
-        .setLabel('Bot Help')
-        .setStyle(ButtonStyle.Secondary);
-
-        const YueOS = new ButtonBuilder()
-        .setCustomId('yueOS')
-        .setLabel('YueOS Help')
-        .setStyle(ButtonStyle.Secondary);
-
-        //Message as a variable
-        var reply = await interaction.reply({content: `Please select a help menu.`, components: [new ActionRowBuilder().addComponents(Bot, YueOS)]});
-
-        //Only take selection from command user
-        const collectorFilter = i => i.user.id === interaction.user.id;
-
-        //collect value from button
-        const ButtonCollector = reply.createMessageComponentCollector({
-          componentType: ComponentType.Button,
-          filter: collectorFilter,
-          time: 30_000 //Button reads for 30s
-        });
-
-        //Upon value taken from button
-        ButtonCollector.on('collect', async (i) => {
-          const YueOSOptions = new StringSelectMenuBuilder()
-          .setCustomId('yueOSCategory')
-          .setPlaceholder('YueOS Help Categories')
-          .addOptions(
-            new StringSelectMenuOptionBuilder()
-              .setLabel('Classes')
-              .setDescription('Class types and their advantages.')
-              .setValue('classes'),
-            new StringSelectMenuOptionBuilder()
-              .setLabel('Commands')
-              .setDescription('Command list.')
-              .setValue('commands'),
-            new StringSelectMenuOptionBuilder()
-              .setLabel('Economy')
-              .setDescription('Details on how to obtain and lose money.')
-              .setValue('economy'),
-          );
-          var Help = new EmbedBuilder()
-          Help.setTitle(`${interaction.client.user.username}`);
-          Help.setThumbnail(interaction.client.user.avatarURL());
-          Help.setFooter({text: `Yue Version: ${YueVersion}`});
-          switch (i.customId) {
-            case "bot":
-              Help.setDescription(`Made by Arctic_Angel\n=============================\n\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0:yellow_heart:IMPORTANT:yellow_heart:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\nThis bot is made purely for fun as\na passion project; production\nwill have pauses and only resume\nwhen I have free time.\n\nPlease use the suggest command\nto give suggestions for the\nname of the game portion of\nYue. Or, if you like YueOS,\nlet me know!\n=============================\n\nYue has been running for\n**${days}** days, **${hours}** hours, **${minutes}** minutes,\nand **${seconds}** seconds.`);
-              await i.update({embeds: [Help]});
-              return;
-            case "yueOS":
-              Help.setDescription(`Made by Arctic_Angel\n=============================\n\nSelect one of the options\nbelow to learn more . . .\n=============================\n\n\nYue Version: ${YueVersion}`);
-              break;
-          }
-
-          //Message as a variable
-          reply = await interaction.editReply({embeds: [Help], components: [new ActionRowBuilder().addComponents(YueOSOptions)]});
-        });
-
-          //collect value from string selection
-          const SelectionCollector = reply.createMessageComponentCollector({
-            componentType: ComponentType.StringSelect,
-            filter: collectorFilter,
-            time: 30_000 //Selection reads for 30s
-          })
-
-          //Upon value taken from selection menu
-          SelectionCollector.on('collect', async (i) => {
-            var Title;
-            var Description;
-            switch (i.values[0]) {
-              case "classes":
-                Title = `Class Details`;
-                Description = `Merchant Class: 20% chance to\ngain a small increase of cash\non the daily command.\n\nAdventurer Class: 10% chance to\ngain a medium increase of\ncash on the daily command.\n\nSolo Class: 2% chance to gain\na large increase of cash on\nthe daily command.`;
-                break;
-              case "commands":
-                Title = `Master Command List`;
-                Description = `:gear: General Commands :gear:\n=============================\n:grey_question: **Help:** Get information on Yue\nor YueOS\n:arrows_counterclockwise: **Refresh:** Refresh Yue!\n:thought_balloon: **Suggest:** Make a suggestion\nfor Yue!\n\n:yellow_heart: YueOS :yellow_heart:\n=============================\n:yellow_square: **Profile:** Set up or view your\nstats!\n:shield: **Class:** Choose a class and gain their\nrespective buffs!\n:date: **Daily:** Claim your daily paycheque!\n:moneybag: **Richest:** See who the current\nrichest user is (global)\n:knife: **Kill:** Yue will attempt to\nkill your enemy.\n💒 **Marry:** Marry another user.\nCost $1000\n❤️‍🔥 **Divorce:** Divorce your spouse.\nCost $2000\n\n:closed_lock_with_key: Developer Commands :closed_lock_with_key:\n=============================\n:tools: **Mode:** Change Yue's Mode.\n:money_with_wings: **Give:** Give money to a user.\n:date: **Reset Daily:** Reset daily\ntimer (global)\n:warning: **Test:** Perform a test.`;
-                break;
-              case "economy":
-                Title = `Economy Details`;
-                Description = `:one: Use /profile to set up an\naccount!\n\n:two: Check class details for\ninformation on class buffs!\n\n:three: Use /daily for daily cash!\n\n:four: Check out /shop for items and\nloot boxes! (WIP)\n\n:five: Dont get killed . . . :smirk:`;
-                break;
-            }
-
-            const Help = new EmbedBuilder()
-            Help.setTitle(Title);
-            Help.setThumbnail(interaction.client.user.avatarURL());
-            Help.setDescription(Description);
-            await i.update({embeds: [Help]});
-          });
-        }
-        var Help = new EmbedBuilder()
+        const CommandList = fs.readFileSync('./HelpInfo/CommandList.txt').toString();
+        const BotHelp = fs.readFileSync('./HelpInfo/BotHelp.txt').toString();
+        const EconomyDetails = fs.readFileSync('./HelpInfo/EconomyDetails.txt').toString();
+        const ClassDetails = fs.readFileSync('./HelpInfo/ClassDetails.txt').toString();
+        Description = BotHelp;
+        
+        const Help = new EmbedBuilder() // Help embed
         Help.setTitle(`${interaction.client.user.username}`);
         Help.setThumbnail(interaction.client.user.avatarURL());
         Help.setFooter({text: `Yue Version: ${YueVersion}`});
         Help.setDescription(Description);
-        interaction.reply({embeds: [Help]});
+        Help.setColor("#aaaaaa");
+
+        // Buttons for help command
+        const CommandButton = new ButtonBuilder()
+        .setCustomId('commands')
+        .setLabel('Command List')
+        .setStyle(ButtonStyle.Secondary);
+
+        const EconomyButton = new ButtonBuilder()
+        .setCustomId('economy')
+        .setLabel('Economy Info')
+        .setStyle(ButtonStyle.Secondary);
+
+        const ClassButton = new ButtonBuilder()
+        .setCustomId('classes')
+        .setLabel('Class Info')
+        .setStyle(ButtonStyle.Secondary);
+
+        const reply = await interaction.reply({embeds: [Help], components: [new ActionRowBuilder().addComponents(CommandButton, ClassButton, EconomyButton)]}); // Message as a variable
+
+        const collectorFilter = i => i.user.id === interaction.user.id; // Only take selection from command user
+
+        // Collect value from button
+        const ButtonCollector = reply.createMessageComponentCollector({
+          componentType: ComponentType.Button,
+          filter: collectorFilter,
+          time: 30_000 // Button reads for 30s
+        });
+
+        // Upon value taken from button
+        ButtonCollector.on('collect', async (i) => {
+          switch (i.customId) {
+            case "commands":
+              Description = CommandList;
+              break;
+            case "economy":
+              Description = EconomyDetails;
+              break;
+            case "classes":
+              Description = ClassDetails;
+              break;
+          }
+          Help.setDescription(Description);
+          i.update({embeds: [Help]});
+        });
         break;
         case "daily":
           var RandomNumber = getRandomInt(100); // Random number from 1-100
@@ -524,7 +476,7 @@ client.on('interactionCreate', async interaction => {
         }
           break;
         case "test":
-
+          
           break;
   }
 });

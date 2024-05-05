@@ -85,13 +85,7 @@ const mode = new SlashCommandBuilder()
 
   const Help = new SlashCommandBuilder()
   .setName("help")
-  .setDescription("Get information regarding Yue and how she works.")
-  .addStringOption(option =>
-    option
-    .setName("category")
-    .setDescription("Shortcut to command list.")
-    .addChoices({name: "commands", value: "Commands"})
-  );
+  .setDescription("Get information regarding Yue and how she works.");
 
   const Daily = new SlashCommandBuilder()
   .setName("daily")
@@ -99,7 +93,7 @@ const mode = new SlashCommandBuilder()
 
   const Reset = new SlashCommandBuilder()
   .setName("reset_daily")
-  .setDescription("Globally reset Yue's daily command :shushing_face:")
+  .setDescription("Globally reset Yue's daily command :shushing_face:");
 
   const Test = new SlashCommandBuilder()
   .setName("test")
@@ -133,7 +127,7 @@ const commands = [
   Reset.toJSON(),
   Test.toJSON(),
   Marry.toJSON(),
-  Divorce.toJSON()
+  Divorce.toJSON(),
 ];
   
 const rest = new REST({ version: '10' }).setToken(config.Token);

@@ -1,0 +1,31 @@
+:gear: General Commands :gear:
+=============================
+:grey_question: **Help:** Get information on Yue
+or YueOS
+:arrows_counterclockwise: **Refresh:** Refresh Yue!
+:thought_balloon: **Suggest:** Make a suggestion
+for Yue!
+
+:yellow_heart: YueOS :yellow_heart:
+=============================
+:yellow_square: **Profile:** Set up or view your
+stats!
+:shield: **Class:** Choose a class and gain their
+respective buffs!
+:date: **Daily:** Claim your daily paycheque!
+:moneybag: **Richest:** See who the current
+richest user is (global)
+:knife: **Kill:** Yue will attempt to
+kill your enemy.
+💒 **Marry:** Marry another user.
+Cost $1000
+❤️‍🔥 **Divorce:** Divorce your spouse.
+Cost $2000
+
+:closed_lock_with_key: Developer Commands :closed_lock_with_key:
+=============================
+:tools: **Mode:** Change Yue's Mode.
+:money_with_wings: **Give:** Give money to a user.
+:date: **Reset Daily:** Reset daily
+timer (global)
+:warning: **Test:** Perform a test.
