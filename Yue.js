@@ -104,7 +104,7 @@ client.on('interactionCreate', async interaction => {
         return;
         }).catch(async error => {
           await interaction.editReply(`There seems to be a lot of radio interference, I cannot kill that target. (Both you and your target have dms turned off)`)
-          console.log(error);
+          DmAble = false;
         });
       if (DmAble == true) interaction.user.send("The job is done, boss. You won't hear of them again.").catch(error => {interaction.editReply("Your dms seem to be off, boss. However I killed them anyway for you.")});
       break;
