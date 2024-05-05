@@ -7,7 +7,7 @@ const config = require("./config.json");
 const BotState = require("./models/BotState");
 const Suggestion = require('./models/Suggestions');
 const Profile = require('./models/Profile');
-const YueVersion = "Beta.2.1";
+const YueVersion = "Beta.2.2";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) // Delay 1s-> await sleep(1000);
 
 //Random number generator (getRandomInt(5) returns num from 1-5)
