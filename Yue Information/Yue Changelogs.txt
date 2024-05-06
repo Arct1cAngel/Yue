@@ -60,7 +60,12 @@ Increased cost of Divorce from $0 to $2000
 Fixed an issue in kill command where Yue 
     would crash if dms were turned off or blocked
 
-Beta.2.2 (Mary 4, 2024)
+Beta.2.2 (May 4, 2024)
 
 Changed help command to run faster, use only buttons,
     and use a much simpler ui.
+
+Beta.2.3 (May 5, 2024)
+
+Added shop command (Work in progress. [Users can buy
+    items but cannot use them])

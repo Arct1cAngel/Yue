@@ -7,6 +7,7 @@ const config = require("./config.json");
 const BotState = require("./models/BotState");
 const Suggestion = require('./models/Suggestions');
 const Profile = require('./models/Profile');
+const Items = require('./models/Items');
 const YueVersion = "Beta.2.2";
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) // Delay 1s-> await sleep(1000);
 
@@ -217,10 +218,10 @@ client.on('interactionCreate', async interaction => {
         });
         break;
       case "help":
-        const CommandList = fs.readFileSync('./HelpInfo/CommandList.txt').toString();
-        const BotHelp = fs.readFileSync('./HelpInfo/BotHelp.txt').toString();
-        const EconomyDetails = fs.readFileSync('./HelpInfo/EconomyDetails.txt').toString();
-        const ClassDetails = fs.readFileSync('./HelpInfo/ClassDetails.txt').toString();
+        const CommandList = fs.readFileSync('./EmbedMessages/CommandList.txt').toString();
+        const BotHelp = fs.readFileSync('./EmbedMessages/BotHelp.txt').toString();
+        const EconomyDetails = fs.readFileSync('./EmbedMessages/EconomyDetails.txt').toString();
+        const ClassDetails = fs.readFileSync('./EmbedMessages/ClassDetails.txt').toString();
         Description = BotHelp;
         
         const Help = new EmbedBuilder() // Help embed
@@ -363,13 +364,13 @@ client.on('interactionCreate', async interaction => {
           });
           if (!CanMarry) return; // If User cannot marry, cancel command
 
-          var Yes = new ButtonBuilder() // "I do"
+          const Yes = new ButtonBuilder() // "I do"
           .setCustomId('yes')
           .setLabel('I do.')
           .setEmoji('💒')
           .setStyle(ButtonStyle.Success);
 
-          var No = new ButtonBuilder() // "I don't"
+          const No = new ButtonBuilder() // "I don't"
           .setCustomId('no')
           .setLabel("I'm sorry I do not.")
           .setEmoji('💔')
@@ -379,31 +380,31 @@ client.on('interactionCreate', async interaction => {
             return Profile.findByPk(Target.id); // Find account owned by Target
           }).then(async (profile) => { // Target found
             if (profile.MarriedTo == null) { // Target is not married
-              var reply = await interaction.reply({content: `<@${Target.id}>, <@${interaction.user.id}> is proposing to you! Do you take them as your spouse? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
+              const reply = await interaction.reply({content: `<@${Target.id}>, <@${interaction.user.id}> is proposing to you! Do you take them as your spouse? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
               
-            // Only take selection from Target
-            var collectorFilter = i => i.user.id === Target.id;
+              // Only take selection from Target
+              const collectorFilter = i => i.user.id === Target.id;
 
-            // Collect value from button
-            var ButtonCollector = reply.createMessageComponentCollector({
-              componentType: ComponentType.Button,
-              filter: collectorFilter,
-              time: 30_000 //Button reads for 30s
-            });
+              // Collect value from button
+              const ButtonCollector = reply.createMessageComponentCollector({
+                componentType: ComponentType.Button,
+                filter: collectorFilter,
+                time: 30_000 // Button reads for 30s
+              });
 
-            // On button pressed:
-            ButtonCollector.on('collect', async (i) => {
-              switch (i.customId) {
-                case "yes":
-                  await Profile.update({MarriedTo: Target.id, Balance: Balance - cost},{where: {id: interaction.user.id}}); // Marry User to Target
-                  await Profile.update({MarriedTo: interaction.user.id},{where: {id: Target.id}}); // Marry Target to User
-                  interaction.editReply({content: `Congratulations! <@${interaction.user.id}> and <@${Target.id}> are now married!`, components: []});
-                  break;
-                case "no":
-                  interaction.editReply({content: `I'm terribly sorry. But, <@${Target.id}> declined your proposal.`, components: []});
-                  break;
-              }
-            });
+              // On button pressed:
+              ButtonCollector.on('collect', async (i) => {
+                switch (i.customId) {
+                  case "yes":
+                    await Profile.update({MarriedTo: Target.id, Balance: Balance - cost},{where: {id: interaction.user.id}}); // Marry User to Target
+                    await Profile.update({MarriedTo: interaction.user.id},{where: {id: Target.id}}); // Marry Target to User
+                    interaction.editReply({content: `Congratulations! <@${interaction.user.id}> and <@${Target.id}> are now married!`, components: []});
+                    break;
+                  case "no":
+                    interaction.editReply({content: `I'm terribly sorry. But, <@${Target.id}> declined your proposal.`, components: []});
+                    break;
+                }
+              });
 
             } else { // Already married
               interaction.reply(`This user is already in a relationship!`);
@@ -432,13 +433,13 @@ client.on('interactionCreate', async interaction => {
             }
           });
           if (canDivorce == true) {
-          var Yes = new ButtonBuilder() // Divorce
+          const Yes = new ButtonBuilder() // Divorce
           .setCustomId('yes')
           .setLabel('Yes')
           .setEmoji('❤️‍🔥')
           .setStyle(ButtonStyle.Danger);
 
-          var No = new ButtonBuilder() // Stay married
+          const No = new ButtonBuilder() // Stay married
           .setCustomId('no')
           .setLabel("No")
           .setEmoji('❤️')
@@ -447,16 +448,16 @@ client.on('interactionCreate', async interaction => {
           await Profile.sync({alter: true}).then(() => {
             return Profile.findByPk(interaction.user.id); // Find account owned by User
           }).then(async (profile) => {
-          var reply = await interaction.reply({content: `Are you sure you want to divorce <@${profile.MarriedTo}>? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
+          const reply = await interaction.reply({content: `Are you sure you want to divorce <@${profile.MarriedTo}>? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
           
           // Only take selection from User
-          var collectorFilter = i => i.user.id === interaction.user.id;
+          const collectorFilter = i => i.user.id === interaction.user.id;
 
           // Collect value from button
-          var ButtonCollector = reply.createMessageComponentCollector({
+          const ButtonCollector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button,
             filter: collectorFilter,
-            time: 30_000 //Button reads for 30s
+            time: 30_000 // Button reads for 30s
           });
 
           // On button pressed:
@@ -477,8 +478,370 @@ client.on('interactionCreate', async interaction => {
           return;
         }
           break;
+        case "shop": // NEED TO MAKE IT SO SHOP ONLY HAS ONE POOL OF ITEMS DAILY PER PERSON
+                     // NEED TO MAKE IT MUCH MORE EFFICIENT
+          var RandomNumberOne;
+          var RandomNumberTwo;
+          var RandomNumberThree;
+          if (!interaction.inGuild()) {
+            interaction.reply({content: "This command is only for use in servers!", ephemeral: true});
+            return;
+          }
+          Profile.sync({alter: true}).then(() => {
+            return Profile.findByPk(interaction.user.id);
+          }).then(async (profile) => {
+            if (profile.LastShop == null) {
+              var LastShop = "NoDate";
+            } else {
+              var LastShop = profile.LastShop.toDateString();
+            }
+            if (LastShop == new Date().toDateString()) {
+              interaction.reply(`You already bought something today! Come back tomorrow to use the command again. (Refreshes at 4:00am GMT)`);
+            } else {
+              if (profile.ShopGenerated != new Date().toDateString() || profile.ShopGenerated == null) {
+                // Generate user's shop selection
+                RandomNumberOne = getRandomInt(5);
+                RandomNumberTwo = RandomNumberOne;
+                RandomNumberThree = RandomNumberOne;
+                while (RandomNumberTwo == RandomNumberOne) {
+                  RandomNumberTwo = getRandomInt(5);
+                }
+                while (RandomNumberThree == RandomNumberTwo || RandomNumberThree == RandomNumberOne) {
+                  RandomNumberThree = getRandomInt(5);
+                }
+                profile.ShopGenerated = new Date().toDateString();
+              }
+              var ItemOne;
+              var ItemTwo;
+              var ItemThree;
+              var Page = 1;
+              var cost;
+              var ItemOneCost;
+              var ItemTwoCost;
+              var ItemThreeCost;
+              var ItemOneCat;
+              var ItemTwoCat;
+              var ItemThreeCat;
+              var Item;
+              var ItemCat;
+              var ShopClosed = false;
+              const ShopMenu = fs.readFileSync('./EmbedMessages/ShopMenu.txt').toString();
+              const Shop = new EmbedBuilder()
+              .setTitle(`Shop`)
+              .setThumbnail(`https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/256x256/store.png`)
+              .setColor(0xffcc00)
+              .setDescription(ShopMenu)
+              .setFooter({text: `Yue Version: ${YueVersion}`})
+    
+              // Buttons for shop command
+              const Back = new ButtonBuilder()
+              .setCustomId('back')
+              .setLabel('Back')
+              .setStyle(ButtonStyle.Primary);
+    
+              const Buy = new ButtonBuilder()
+              .setCustomId('buy')
+              .setLabel('Buy')
+              .setStyle(ButtonStyle.Success)
+              .setDisabled(true);
+    
+              const Next = new ButtonBuilder()
+              .setCustomId('next')
+              .setLabel('Next')
+              .setStyle(ButtonStyle.Primary);
+    
+              const ShopReply = await interaction.reply({embeds: [Shop], components: [new ActionRowBuilder().addComponents(Back, Buy, Next)]}); // Message as a variable
+    
+              // Only take selection from User
+              const ShopFilter = i => i.user.id === interaction.user.id;
+    
+              // Collect value from button
+              const ShopCollector = ShopReply.createMessageComponentCollector({
+                componentType: ComponentType.Button,
+                filter: ShopFilter,
+                time: 30_000 // Button reads for 30s
+              });
+    
+              ShopCollector.on('collect', async (i) => { // On button clicked
+    
+                Buy.setDisabled(false);
+    
+                await Items.sync({alter: true}).then(() => {
+                  return Items.findByPk(RandomNumberOne); // Find item
+                }).then(async (Item) => {
+                  ItemOne = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+                  ItemOneCost = Item.Cost;
+                  ItemOneCat = Item.Category;
+                }).catch(error => {
+                  interaction.editReply("Shit's fucked check logs for info");
+                  console.log(error);
+                });
+    
+                await Items.sync({alter: true}).then(() => {
+                  return Items.findByPk(RandomNumberTwo); // Find item
+                }).then(async (Item) => {
+                  ItemTwo = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+                  ItemTwoCost = Item.Cost;
+                  ItemTwoCat = Item.Category;
+                }).catch(error => {
+                  interaction.editReply("Shit's fucked check logs for info");
+                  console.log(error);
+                });
+    
+                await Items.sync({alter: true}).then(() => {
+                  return Items.findByPk(RandomNumberThree); // Find item
+                }).then(async (Item) => {
+                  ItemThree = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+                  ItemThreeCost = Item.Cost;
+                  ItemThreeCat = Item.Category;
+                }).catch(error => {
+                  interaction.editReply("Shit's fucked check logs for info");
+                  console.log(error);
+                });
+    
+                switch (i.customId) {
+                  case "back":
+                    Page--;
+                    break;
+                  case "buy":
+                    await Profile.sync({alter: true}).then(() => {
+                      return Profile.findByPk(interaction.user.id); // Find account owned by User
+                    }).then(async (profile) => {
+                        Balance = profile.Balance;
+                        if (profile.Balance - cost < 0) { // Check if User has enough money to marry
+                          interaction.editReply("You lack the funds to purchase this item!");
+                          return;
+                        } else {
+                          ShopClosed = true;
+                        }
+                  });
+                    break;
+                  case "next":
+                    Page++;
+                    break;
+                }
+                if (ShopClosed) {
+                  switch (ItemCat) {
+                    case `Weapon`:
+                      await Profile.update({Balance: Balance - cost, Weapon: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                      break;
+                    case `Magic`:
+                      await Profile.update({Balance: Balance - cost, Magic: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                      break;
+                    case `Shield`:
+                      await Profile.update({Balance: Balance - cost, Shield: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                      break;
+                    case `Armor`:
+                      await Profile.update({Balance: Balance - cost, Armor: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                      break;
+                  }
+                  i.update({content: `Thank you for your purchase!`, components: []});
+                  return;
+                }
+                if (Page == 0) {
+                  Page = 3;
+                } else if (Page == 4) {
+                  Page = 1;
+                }
+                switch (Page) {
+                  case 1:
+                    Description = ItemOne;
+                    cost = ItemOneCost;
+                    Item = RandomNumberOne;
+                    ItemCat = ItemOneCat;
+                    break;
+                  case 2:
+                    Description = ItemTwo;
+                    cost = ItemTwoCost;
+                    Item = RandomNumberTwo;
+                    ItemCat = ItemTwoCat;
+                    break;
+                  case 3:
+                    Description = ItemThree;
+                    cost = ItemThreeCost;
+                    Item = RandomNumberThree;
+                    ItemCat = ItemThreeCat;
+                    break
+                }
+                Shop.setTitle(`Shop`)
+                //Shop.setThumbnail()
+                //Shop.setColor(Rarity)
+                Shop.setDescription(Description)
+                Shop.setFooter({text: `Yue Version: ${YueVersion}`})
+                i.update({embeds: [Shop], components: [new ActionRowBuilder().addComponents(Back, Buy, Next)]})
+              });
+          }
+        });
+          break;
         case "test":
-          
+          var ItemOne;
+          var ItemTwo;
+          var ItemThree;
+          var Page = 1;
+          var cost;
+          var ItemOneCost;
+          var ItemTwoCost;
+          var ItemThreeCost;
+          var RandomNumberOne = getRandomInt(5);
+          var RandomNumberTwo = RandomNumberOne;
+          var RandomNumberThree = RandomNumberOne;
+          var ItemOneCat;
+          var ItemTwoCat;
+          var ItemThreeCat;
+          var Item;
+          var ItemCat;
+          var ShopClosed = false;
+          while (RandomNumberTwo == RandomNumberOne) {
+            RandomNumberTwo = getRandomInt(5);
+          }
+          while (RandomNumberThree == RandomNumberTwo || RandomNumberThree == RandomNumberOne) {
+            RandomNumberThree = getRandomInt(5);
+          }
+          const ShopMenu = fs.readFileSync('./EmbedMessages/ShopMenu.txt').toString();
+          const Shop = new EmbedBuilder()
+          .setTitle(`Shop`)
+          .setThumbnail(`https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/256x256/store.png`)
+          .setColor(0xffcc00)
+          .setDescription(ShopMenu)
+          .setFooter({text: `Yue Version: ${YueVersion}`})
+
+          // Buttons for shop command
+          const Back = new ButtonBuilder()
+          .setCustomId('back')
+          .setLabel('Back')
+          .setStyle(ButtonStyle.Primary);
+
+          const Buy = new ButtonBuilder()
+          .setCustomId('buy')
+          .setLabel('Buy')
+          .setStyle(ButtonStyle.Success)
+          .setDisabled(true);
+
+          const Next = new ButtonBuilder()
+          .setCustomId('next')
+          .setLabel('Next')
+          .setStyle(ButtonStyle.Primary);
+
+          const ShopReply = await interaction.reply({embeds: [Shop], components: [new ActionRowBuilder().addComponents(Back, Buy, Next)]}); // Message as a variable
+
+          // Only take selection from User
+          const ShopFilter = i => i.user.id === interaction.user.id;
+
+          // Collect value from button
+          const ShopCollector = ShopReply.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+            filter: ShopFilter,
+            time: 30_000 // Button reads for 30s
+          });
+
+          ShopCollector.on('collect', async (i) => { // On button clicked
+
+            Buy.setDisabled(false);
+
+            await Items.sync({alter: true}).then(() => {
+              return Items.findByPk(RandomNumberOne); // Find item
+            }).then(async (Item) => {
+              ItemOne = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+              ItemOneCost = Item.Cost;
+              ItemOneCat = Item.Category;
+            }).catch(error => {
+              interaction.editReply("Shit's fucked check logs for info");
+              console.log(error);
+            });
+
+            await Items.sync({alter: true}).then(() => {
+              return Items.findByPk(RandomNumberTwo); // Find item
+            }).then(async (Item) => {
+              ItemTwo = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+              ItemTwoCost = Item.Cost;
+              ItemTwoCat = Item.Category;
+            }).catch(error => {
+              interaction.editReply("Shit's fucked check logs for info");
+              console.log(error);
+            });
+
+            await Items.sync({alter: true}).then(() => {
+              return Items.findByPk(RandomNumberThree); // Find item
+            }).then(async (Item) => {
+              ItemThree = `${Item.Name}\nType: ${Item.Category}\nDamage: ${Item.Damage}\nPrice: $${Item.Cost}\nRarity: ${Item.Rarity}`;
+              ItemThreeCost = Item.Cost;
+              ItemThreeCat = Item.Category;
+            }).catch(error => {
+              interaction.editReply("Shit's fucked check logs for info");
+              console.log(error);
+            });
+
+            switch (i.customId) {
+              case "back":
+                Page--;
+                break;
+              case "buy":
+                await Profile.sync({alter: true}).then(() => {
+                  return Profile.findByPk(interaction.user.id); // Find account owned by User
+                }).then(async (profile) => {
+                    Balance = profile.Balance;
+                    if (profile.Balance - cost < 0) { // Check if User has enough money to marry
+                      interaction.editReply("You lack the funds to purchase this item!");
+                      return;
+                    } else {
+                      ShopClosed = true;
+                    }
+              });
+                break;
+              case "next":
+                Page++;
+                break;
+            }
+            if (ShopClosed) {
+              switch (ItemCat) {
+                case `Weapon`:
+                  await Profile.update({Balance: Balance - cost, Weapon: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                  break;
+                case `Magic`:
+                  await Profile.update({Balance: Balance - cost, Magic: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                  break;
+                case `Shield`:
+                  await Profile.update({Balance: Balance - cost, Shield: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                  break;
+                case `Armor`:
+                  await Profile.update({Balance: Balance - cost, Armor: Item, LastShop: new Date().toDateString()},{where: {id: interaction.user.id}});
+                  break;
+              }
+              i.update({content: `Thank you for your purchase!`, components: []});
+              return;
+            }
+            if (Page == 0) {
+              Page = 3;
+            } else if (Page == 4) {
+              Page = 1;
+            }
+            switch (Page) {
+              case 1:
+                Description = ItemOne;
+                cost = ItemOneCost;
+                Item = RandomNumberOne;
+                ItemCat = ItemOneCat;
+                break;
+              case 2:
+                Description = ItemTwo;
+                cost = ItemTwoCost;
+                Item = RandomNumberTwo;
+                ItemCat = ItemTwoCat;
+                break;
+              case 3:
+                Description = ItemThree;
+                cost = ItemThreeCost;
+                Item = RandomNumberThree;
+                ItemCat = ItemThreeCat;
+                break
+            }
+            Shop.setTitle(`Shop`)
+            //Shop.setThumbnail()
+            //Shop.setColor(Rarity)
+            Shop.setDescription(Description)
+            Shop.setFooter({text: `Yue Version: ${YueVersion}`})
+            i.update({embeds: [Shop], components: [new ActionRowBuilder().addComponents(Back, Buy, Next)]})
+          });
           break;
   }
 });

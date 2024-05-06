@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require("../database");
+const Table = require("../database");
 
-const BotState = sequelize.define("BotState", {
+const BotState = Table.define("BotState", {
     state: {
         type: Sequelize.STRING
     }

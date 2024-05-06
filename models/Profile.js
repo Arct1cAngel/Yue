@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require("../database");
+const Table = require("../database");
 
-const Profile = sequelize.define("Profile", {
+const Profile = Table.define("Profile", {
     Username: {
         type: Sequelize.STRING
     },
@@ -17,6 +17,14 @@ const Profile = sequelize.define("Profile", {
         type: Sequelize.DATE,
         allowNull: true
     },
+    LastShop: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
+    ShopGenerated: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true
@@ -25,6 +33,24 @@ const Profile = sequelize.define("Profile", {
         type: Sequelize.STRING,
         allowNull: true
     },
+    //Equips
+    Weapon: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    Magic: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    Shield: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    },
+    Armor: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+    }
+
 },
 {
     timestamps: false,

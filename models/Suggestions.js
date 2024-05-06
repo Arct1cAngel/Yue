@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = require("../database");
+const Table = require("../database");
 
-const Suggestion = sequelize.define("Suggestion", {
+const Suggestion = Table.define("Suggestion", {
     suggestion: {
         type: Sequelize.STRING
     },

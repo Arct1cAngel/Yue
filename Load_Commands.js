@@ -97,7 +97,7 @@ const mode = new SlashCommandBuilder()
 
   const Test = new SlashCommandBuilder()
   .setName("test")
-  .setDescription("For testing purposes.");
+  .setDescription("For testing purposes.")
 
   const Marry = new SlashCommandBuilder()
   .setName("marry")
@@ -112,6 +112,10 @@ const mode = new SlashCommandBuilder()
   const Divorce = new SlashCommandBuilder()
   .setName("divorce")
   .setDescription("Divorce your spouse.");
+
+  const Shop = new SlashCommandBuilder()
+  .setName("shop")
+  .setDescription("Daily shop.");
 
 const commands = [
   profile.toJSON(),
@@ -128,6 +132,7 @@ const commands = [
   Test.toJSON(),
   Marry.toJSON(),
   Divorce.toJSON(),
+  Shop.toJSON(),
 ];
   
 const rest = new REST({ version: '10' }).setToken(config.Token);
