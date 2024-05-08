@@ -21,10 +21,6 @@ const Profile = Table.define("Profile", {
         type: Sequelize.DATE,
         allowNull: true
     },
-    ShopGenerated: {
-        type: Sequelize.DATE,
-        allowNull: true
-    },
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true
