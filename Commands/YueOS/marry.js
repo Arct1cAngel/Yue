@@ -15,13 +15,12 @@ module.exports = {
       .setRequired(true)
     ),
 	async execute(interaction) {
-        var Target = interaction.options.getUser('target'); // Targetting user selected in the slash command
+        var Target = interaction.options.getUser('target');
         var CanMarry = true;
         var cost = 1000;
         var Balance;
-        await Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(interaction.user.id); // Find account owned by User
-        }).then(async (profile) => {
+        // If User does not own an account, create one
+        await Profile.findByPk(interaction.user.id).catch(await Profile.upsert({Username: interaction.user.username, id: interaction.user.id}, {where: {}})).then(async (profile) => {
           Balance = profile.Balance;
           if (profile.MarriedTo) {
             interaction.reply(`You're already married! Don't be a cheater.`); // If User is already married
@@ -30,6 +29,10 @@ module.exports = {
           }
           if (profile.Balance - cost < 0) { // Check if User has enough money to marry
             interaction.reply("You lack the funds to propose, it costs $1000 to propose to somebody.");
+            CanMarry = false;
+            return;
+          } else if (Target == interaction.user) {
+            interaction.reply("You can't marry yourself!");
             CanMarry = false;
             return;
           }
@@ -48,9 +51,7 @@ module.exports = {
         .setEmoji('💔')
         .setStyle(ButtonStyle.Primary);
 
-        await Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(Target.id); // Find account owned by Target
-        }).then(async (profile) => { // Target found
+        await Profile.findByPk(Target.id).then(async (profile) => { // Target found
           if (profile.MarriedTo == null) { // Target is not married
             const reply = await interaction.reply({content: `<@${Target.id}>, <@${interaction.user.id}> is proposing to you! Do you take them as your spouse? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
             
@@ -82,7 +83,7 @@ module.exports = {
             interaction.reply(`This user is already in a relationship!`);
           }
         }).catch(async (error) => { // Target not found
-          await interaction.reply({content: `Could not propose to ${Target} because they don't have an account. Use /profile to make an account!`});
+          await interaction.reply({content: `Could not propose to ${Target} try again later.`});
         });
 	},
 };

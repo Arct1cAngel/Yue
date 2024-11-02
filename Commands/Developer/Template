@@ -1,3 +1,7 @@
+const { ActionRowBuilder, ComponentType } = require('discord.js'); // Buttons and Drop-Down Menus
+const { ButtonBuilder, ButtonStyle } = require('discord.js'); // Buttons
+const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js'); // Drop-Down Menus
+
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

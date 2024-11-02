@@ -1,11 +1,19 @@
-Merchant Class: 20% chance to
+Gambler Class: 5% chance to
+not lose your bet if you lose
+in the casino.
+($2500)
+
+Merchant Class: 40% chance to
 gain a small increase of cash
 on the daily command.
+($1000)
 
-Adventurer Class: 10% chance to
+Adventurer Class: 20% chance to
 gain a medium increase of
 cash on the daily command.
+($500)
 
-Solo Class: 2% chance to gain
+Solo Class: 5% chance to gain
 a large increase of cash on
 the daily command.
+($200)

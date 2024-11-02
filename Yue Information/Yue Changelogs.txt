@@ -72,5 +72,73 @@ Added shop command (Work in progress. [Users can buy
 
 Beta.2.4 (May 7, 2024)
 
-Improved Yue's command selection and execution speeds
+Improved Yue's command selection and execution speeds.
     (She's faster now)
+
+Beta.2.5 (May 7, 2024)
+
+Fixed an issue in kill command where Yue
+    would say she killed your target and
+    immediately say she did not.
+
+Beta.2.6 (May 9, 2024)
+
+Fixed shop command to automatically generate a daily
+    shop pool and add items to User's accounts
+
+Beta.2.7 ()
+
+Increased odds of increased daily yield for each class
+    as follows:
+        Merchant 20% -> 40%
+        Adventurer 10% -> 20%
+        Solo 2% -> 5%
+Added Blackjack command
+Added Roulette command
+Updated daily reset to reset all daily commands
+Increased odds of all shop rarities as follows:
+    Epic 10% -> 20%
+    Legendary 5% -> 10%
+Added more items to shop pool:
+    Weapons:
+        Alvus
+        Donner
+        Schlag
+        Metzelei
+        Orkan
+        Donner & Schlag
+        Schlagen
+        PileBunker
+    Magic:
+        Fireball
+        Wind Blade
+        Ice Spear
+        Glacial Sleet
+        Tidal Wave
+        Flame Fortress
+        Crimson Javelin
+        Lightning Field
+        Crystal Coffin
+        Thunderlord's Judgement
+        Yue's Heart Fireball
+        Frost Purgatory
+        Azure Blaze
+    Shield:
+        Cross Bits
+	Basic -> Legendary Mana Shields
+	Mechanic Shield
+	Drucken (Shield Mode)
+	Aideon
+	VilleDrucken (Shield Mode)
+	Cross Bits
+	Onyx Shields
+	Cross Welts
+	Hallowed Ground
+    Armor:
+	Yue's Coat (Fake)
+	Hajime's Coat (Fake)
+	Yue's Coat
+	Hajime's Coat
+	Ebony Coat
+	Divine Armor
+    

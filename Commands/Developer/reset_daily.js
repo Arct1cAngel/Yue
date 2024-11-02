@@ -6,16 +6,17 @@ const config = require(path.join(__dirname, `..`, `..`, `config.json`));
 module.exports = {
 	data: new SlashCommandBuilder()
     .setName("reset_daily")
-    .setDescription("Globally reset Yue's daily command :shushing_face:"),
+    .setDescription("Globally reset Yue's daily commands :shushing_face:"),
 	async execute(interaction) {
         if (interaction.user.id == config.Arctic) {
             Profile.update(
               {
-                LastDaily: "No"
+                LastDaily: "No",
+                LastShop: "No"
               },
               { where: {} }
             );
-            interaction.reply(`Daily has been reset for all users.`)
+            interaction.reply(`Daily commands have been reset for all users.`)
           } else {
             interaction.reply("You don't have access to this command!");
           }

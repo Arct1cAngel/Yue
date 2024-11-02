@@ -12,6 +12,7 @@ module.exports = {
       .setDescription("What class are you registering for?")
       .setRequired(true)
       .addChoices(
+        { name: "Gambler - $2500 ( + Your Soul)", value: "Gambler"},
         { name: "Merchant - $1000", value: "Merchant" },
         { name: "Adventurer - $500", value: "Adventurer" },
         { name: "Solo - $200", value: "Solo"}
@@ -21,19 +22,20 @@ module.exports = {
         const ClassChoice = interaction.options.getString("class_choice");
         var cost;
         switch (ClassChoice) {
-          case "Adventurer":
-            cost = 500;
+          case "Gambler":
+            cost = 2500;
             break;
           case "Merchant":
             cost = 1000;
+            break;
+          case "Adventurer":
+            cost = 500;
             break;
           case "Solo":
             cost = 200;
             break;
         }
-        Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(interaction.user.id);
-        }).then((profile) => {
+        await Profile.findByPk(interaction.user.id).then((profile) => {
           if (profile.Balance - cost < 0) {
           interaction.reply("You lack the funds to register to this class, go beg on the street you hobo.");
             return;

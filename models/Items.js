@@ -17,6 +17,10 @@ const Items = Table.define("Items", {
     Rarity: {
         type: Sequelize.STRING,
     },
+    Element: {
+        type: Sequelize.STRING,
+        defaultValue: `None`
+    }
 },
 {
     timestamps: false,

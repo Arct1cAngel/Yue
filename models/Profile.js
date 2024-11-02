@@ -13,14 +13,6 @@ const Profile = Table.define("Profile", {
         type: Sequelize.STRING,
         defaultValue: "No"
     },
-    LastDaily: {
-        type: Sequelize.DATE,
-        allowNull: true
-    },
-    LastShop: {
-        type: Sequelize.DATE,
-        allowNull: true
-    },
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true
@@ -29,22 +21,56 @@ const Profile = Table.define("Profile", {
         type: Sequelize.STRING,
         allowNull: true
     },
-    //Equips
+    Customization: {
+        type: Sequelize.STRING,
+        defaultValue: "5000FF,You're kind of poor aren't you? :smirk:"
+    },
+    // Equips
+    // ▰▱
+    Health: {
+        type: Sequelize.STRING,
+        defaultValue: "▰▰▰▰▰▰▰▰▰▰ 100/100"
+    },
+    Status: {
+        type: Sequelize.STRING,
+        defaultValue: "",
+    },
     Weapon: {
-        type: Sequelize.INTEGER,
-        allowNull: true
+        type: Sequelize.STRING,
+        defaultValue: "None",
     },
     Magic: {
-        type: Sequelize.INTEGER,
-        allowNull: true
+        type: Sequelize.STRING,
+        defaultValue: "None",
     },
     Shield: {
-        type: Sequelize.INTEGER,
-        allowNull: true
+        type: Sequelize.STRING,
+        defaultValue: "None",
     },
     Armor: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
+        defaultValue: "None",
+    },
+    // Dates
+    LastDaily: {
+        type: Sequelize.DATE,
         allowNull: true
+    },
+    LastShop: {
+        type: Sequelize.DATE,
+        allowNull: true
+    },
+    ShopPool: {
+        type: Sequelize.STRING,
+        allowNull: true
+    },
+    GambleStreak: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
+    Inventory: {
+        type: Sequelize.STRING,
+        defaultValue: ""
     }
 
 },

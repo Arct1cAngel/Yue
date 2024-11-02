@@ -1,14 +1,18 @@
+// Invite Link: https://discord.com/oauth2/authorize?client_id=1173812455672139897&permissions=565014423923798&scope=bot
+// Support Server: https://discord.com/invite/XcNa9EfVSd
 // Discord.js
-const { Client, GatewayIntentBits, ActivityType, Collection } = require('discord.js'); // Bot
-//const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js'); // Drop-Down Menus
+const { Client, GatewayIntentBits, ActivityType, Collection, ChannelType, PermissionsBitField, EmbedBuilder } = require('discord.js'); // Bot
 const packageJSON = require("./package.json"); // Using Data from Package.json
-global.client = new Client({ intents: [GatewayIntentBits.Guilds] }); // Define the bot
+global.client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] }); // Define the bot USES GUILDMEMBERS INTENT. PLEASE APPLY FOR USE ON VERIFICATION
 const config = require("./config.json");
 const BotState = require("./models/BotState");
+const Profile = require(`./models/Profile.js`);
+const Servers = require(`./models/Servers.js`);
 client.commands = new Collection(); // Collection (Array) of Commands
  // File System
 const fs = require('fs');
 const path = require('path');
+const WelcomeMessage = fs.readFileSync('./EmbedMessages/WelcomeMessage.txt').toString();
 
 client.on('ready', () => { // On Bot Login. . .
   process.stdout.write('\x1Bc') // Clears The Console
@@ -50,8 +54,24 @@ for (const folder of fs.readdirSync(path.join(__dirname, `Commands`))) { // For 
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return; // Return if Not a Slash Command
+  // If Target does not own an account, create one
+  var Target = interaction.options.getUser('target');
+  if (!Target) Target = interaction.user;
+  await Profile.findByPk(Target.id).catch(await Profile.upsert({Username: Target.username, id: Target.id}, {where: {}})).catch(error => console.log(`${error}\n\nPrevented a crash.`));
   const command = interaction.client.commands.get(interaction.commandName);
   await command.execute(interaction);
+});
+
+client.on(`guildCreate`, async (Guild) => {
+  await Servers.upsert({Name: Guild.name, id: Guild.id}, {where: {id: Guild.id}});
+  let Owner = await Guild.fetchOwner();
+  const Welcome = new EmbedBuilder()
+  .setThumbnail(client.user.avatarURL())
+  .setTitle(`Hello! I was just added to **${Guild.name}!**`)
+  .setDescription(WelcomeMessage)
+  .setColor(config.YueYellow)
+  .setFooter({text: `Yue Version: ${config.YueVersion}`})
+  Owner.send({embeds: [Welcome]});
 });
 
 client.login(config.Token);

@@ -23,9 +23,7 @@ module.exports = {
         if (interaction.user.id == config.Arctic) {
             var Target = interaction.options.getUser('target');
             var Amount = interaction.options.get("amount").value;
-            await Profile.sync({alter: true}).then(() => {
-              return Profile.findByPk(Target.id);
-            }).then((profile) => {
+            await Profile.findByPk(Target.id).then((profile) => {
               Profile.update(
                 {
                   Balance: profile.Balance + Amount

@@ -1,0 +1,46 @@
+Items:
+=============================
+⚔️**Weapons**: High Physical Damage
+with lower Crit Rate.
+
+✨**Magic**: Magic Damage with
+different Crit Effects and
+higher Crit Rate.
+
+👕**Armor**: Protect against Magic
+
+🛡️**Shields**: Protect against 
+Weapons
+
+Crit Effects:
+=============================
+⚔️**Physical:** x1.5 Damage
+
+🔥**Fire:** Burn your enemy
+for 1-3 Damage over Time!
+(***Burning***)
+
+🧊**Ice:** Freeze your enemy
+in place to stop them from
+dealing damage!
+(***Frozen***)
+
+💧**Water:** Drench your enemy
+to make them deal 25% less
+damage!
+(***Drenched***)
+
+⚡**Lightning:** Strike your
+enemy with Higher Crit
+Damage but lower Crit Rate.
+
+🍃**Wind:** Slash your enemy
+with Higher Crit Rate but
+lower Crit Damage.
+
+Heal: ($250)
+=============================
+♥️ **Healing:** Use /heal 
+outside of battle to restore
+your health to full and clear
+any status effect!

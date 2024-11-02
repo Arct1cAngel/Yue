@@ -1,10 +1,20 @@
 Made by Arctic_Angel
 =============================
-              :yellow_heart:IMPORTANT:yellow_heart:              
+:black_large_square::black_large_square::yellow_heart:IMPORTANT:yellow_heart::black_large_square::black_large_square:
 This bot is made purely for fun as
 a passion project; production
 will have pauses and only resume
-when I have free time.
+when I have free time. 
+
+***Legal Disclaimer:***
+I, Arctic_Angel, 
+take no ownership for the 
+material taken from **Arifureta 
+Shokugyou de Sekai
+Saikyou**. This includes but is
+not limited to: Weapons, Items,
+Characters, and Ideas derived
+from the series.
 
 Please use the suggest command
 to give suggestions for the

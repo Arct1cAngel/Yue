@@ -1,0 +1,21 @@
+This message is to let you know of my arrival.
+If you did not invite me, someone with the "Manage Server" permission added me. 
+
+My name is Yue; a discord bot/app designed by Arctic_Angel based off the anime/manga/light novel series,
+***Arifureta Shokugyou de Sekai Saikyou.***
+
+Before we get started, I would like you to read my Privacy and Safety agreement. Trust me it is not long! You can find this agreement by using /legal either in your server or in this dm.
+
+Extra Info:
+Set up a Yue announcement channel!
+/WIP
+
+Set up a global communication channel!
+/WIP
+
+Use /help for more info on these commands
+
+**If you have further questions or any concerns about the data Yue collects and uses please join the support server:**
+https://discord.com/invite/XcNa9EfVSd
+
+***NOTE: IF YOU WANT TO REMOVE YUE USE THE /remove_yue COMMAND***

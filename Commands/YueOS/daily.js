@@ -18,9 +18,7 @@ module.exports = {
           interaction.reply({content: "This command is only for use in servers!", ephemeral: true});
           return;
         }
-        Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(interaction.user.id);
-        }).then((profile) => {
+        await Profile.findByPk(interaction.user.id).then((profile) => {
           if (profile.LastDaily == null) {
             var LastDaily = "NoDate";
           } else {
@@ -31,19 +29,19 @@ module.exports = {
           } else {
             switch (profile.Class) {
               case "Merchant":
-                if (RandomNumber <= 20) {
-                Bonus = getRandomInt(50) * 3;
+                if (RandomNumber <= 40) {
+                Bonus = (getRandomInt(50) * 3)+ 50;
                 Reply = " :star: Merchant bonus!";
                 }
                 break;
               case "Adventurer":
-                if (RandomNumber <= 10) {
+                if (RandomNumber <= 20) {
                   Bonus = (getRandomInt(25) * 4) + 150;
                   Reply = " :star: Adventurer bonus!";
                 }
                 break;
               case "Solo":
-                if (RandomNumber <= 2) {
+                if (RandomNumber <= 5) {
                   Bonus = (getRandomInt(10) *10) + 400;
                   Reply = " :star: Solo bonus!";
                 }

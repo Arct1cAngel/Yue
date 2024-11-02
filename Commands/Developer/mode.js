@@ -25,9 +25,7 @@ module.exports = {
               {state: mode},
               {where: {id: 1} }
               )
-            BotState.sync({alter: true}).then(() => {
-              return BotState.findByPk(1);
-            }).then((CurrentState) => {
+            await BotState.findByPk(1).then((CurrentState) => {
               console.log(`Updated Yue's state to: ${CurrentState.state} Mode`);
             });
             switch (mode) {

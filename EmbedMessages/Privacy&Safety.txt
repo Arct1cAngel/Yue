@@ -1,0 +1,28 @@
+**PRIVACY AND SAFETY AGREEMENT
+============================**
+Yue collects and reads data from your server upon server join, and user data is collected/generated upon interaction or direct message.
+The data collected and used by Yue includes but may expand from:
+**Users:**
+Username, User ID, Profile Picture
+**Server:**
+Server Name and ID, Server Icon, Member Count, Roles, Channel Names and IDs
+
+*All of this data is publically available to users on discord, however this bot has a database it uses for entertainment purposes and it gets saved locally on Yue's host server.
+Since this data is being logged somewhere, I believe it moral to tell you. This data is all deleted when Yue is
+removed from your server or if you never interact with her (use commands or be a target of a command).*
+
+If you would like to remove your server from the database, you MUST use the /remove_yue command in your server. If you dont, your data will still be stored. If you accidentally kick her, add her back and use the command. It will remove the data successfully.
+**============================**
+
+***Legal Disclaimer:***
+I, Arctic_Angel, 
+take no ownership for the 
+material taken from **Arifureta 
+Shokugyou de Sekai
+Saikyou**. This includes but is
+not limited to: Weapons, Items,
+Characters, and Ideas derived
+from the series.
+
+**If you have further questions or any concerns about the data Yue collects and uses please join the support server:**
+https://discord.com/invite/XcNa9EfVSd

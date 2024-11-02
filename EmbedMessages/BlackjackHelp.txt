@@ -1,0 +1,24 @@
+<:spade:1239390979950247966>How to Play Blackjack!:hearts:
+==========================
+
+Add cards to your hand (hit)
+and attempt to have a higher 
+hand value than me at the 
+end. End your turn (stay) 
+before you go above 21.
+
+Do not go over 21;
+you bust and lose.
+
+If we have the same value of
+cards (push), you dont win
+or lose.
+
+Jack and Ace is blackjack
+
+<:spade:1239390979950247966>:hearts:__Card values:__<:club:1239391005401284700>:diamonds:
+**Ace:** 1 or 11 (only on first turn)
+**Numerics:** Respective values
+**J,Q, and K:** 10
+
+Ready?

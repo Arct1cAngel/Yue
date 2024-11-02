@@ -21,6 +21,9 @@ kill your enemy.
 Cost $1000
 ❤️‍🔥 **Divorce:** Divorce your spouse.
 Cost $2000
+🎲 **Roulette:** Play a game of classic Roulette.
+<:spade:1239390979950247966> **Blackjack:** Play a game of 1 deck Blackjack.
+<:Schlag:1241861137826447511> **Attack:** Attack your enemies and steal their money.
 
 :closed_lock_with_key: Developer Commands :closed_lock_with_key:
 =============================

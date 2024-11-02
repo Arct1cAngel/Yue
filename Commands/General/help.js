@@ -13,7 +13,7 @@ module.exports = {
 	async execute(interaction) {
         const CommandList = fs.readFileSync(path.join(__dirname, `..`, `..`, `EmbedMessages`, `CommandList.txt`)).toString();
         const BotHelp = fs.readFileSync(path.join(__dirname, `..`, `..`, `EmbedMessages`, `BotHelp.txt`)).toString();
-        const EconomyDetails = fs.readFileSync(path.join(__dirname, `..`, `..`, `EmbedMessages`, `EconomyDetails.txt`)).toString();
+        const YueOSDetails = fs.readFileSync(path.join(__dirname, `..`, `..`, `EmbedMessages`, `YueOSDetails.txt`)).toString();
         const ClassDetails = fs.readFileSync(path.join(__dirname, `..`, `..`, `EmbedMessages`, `ClassDetails.txt`)).toString();
         var Description = BotHelp;
         
@@ -30,9 +30,9 @@ module.exports = {
         .setLabel('Command List')
         .setStyle(ButtonStyle.Secondary);
 
-        const EconomyButton = new ButtonBuilder()
-        .setCustomId('economy')
-        .setLabel('Economy Info')
+        const YueOSButton = new ButtonBuilder()
+        .setCustomId('yueOS')
+        .setLabel('YueOS Info')
         .setStyle(ButtonStyle.Secondary);
 
         const ClassButton = new ButtonBuilder()
@@ -40,7 +40,7 @@ module.exports = {
         .setLabel('Class Info')
         .setStyle(ButtonStyle.Secondary);
 
-        const reply = await interaction.reply({embeds: [Help], components: [new ActionRowBuilder().addComponents(CommandButton, ClassButton, EconomyButton)]}); // Message as a variable
+        const reply = await interaction.reply({embeds: [Help], components: [new ActionRowBuilder().addComponents(CommandButton, ClassButton, YueOSButton)]}); // Message as a variable
 
         const collectorFilter = i => i.user.id === interaction.user.id; // Only take selection from command user
 
@@ -57,8 +57,8 @@ module.exports = {
             case "commands":
               Description = CommandList;
               break;
-            case "economy":
-              Description = EconomyDetails;
+            case "yueOS":
+              Description = YueOSDetails;
               break;
             case "classes":
               Description = ClassDetails;

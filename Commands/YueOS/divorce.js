@@ -12,9 +12,8 @@ module.exports = {
         var canDivorce = false;
         var cost = 2000;
         var Balance;
-        await Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(interaction.user.id); // Find account owned by User
-        }).then(async (profile) => {
+        // Find account owned by User
+        await Profile.findByPk(interaction.user.id).then(async (profile) => {
           Balance = profile.Balance;
           if (!profile.MarriedTo) {
             interaction.reply(`You aren't married to anybody!`);
@@ -39,19 +38,15 @@ module.exports = {
         .setLabel("No")
         .setEmoji('❤️')
         .setStyle(ButtonStyle.Primary);
-
-        await Profile.sync({alter: true}).then(() => {
-          return Profile.findByPk(interaction.user.id); // Find account owned by User
-        }).then(async (profile) => {
-        const reply = await interaction.reply({content: `Are you sure you want to divorce <@${profile.MarriedTo}>? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
         
-        // Only take selection from User
-        const collectorFilter = i => i.user.id === interaction.user.id;
+        // Find account owned by User
+        await Profile.findByPk(interaction.user.id).then(async (profile) => {
+        const reply = await interaction.reply({content: `Are you sure you want to divorce <@${profile.MarriedTo}>? (You have 30s to respond)`, components: [new ActionRowBuilder().addComponents(Yes, No)]});
 
         // Collect value from button
         const ButtonCollector = reply.createMessageComponentCollector({
           componentType: ComponentType.Button,
-          filter: collectorFilter,
+          filter: i => i.user.id === interaction.user.id, // Only take selection from User
           time: 30_000 // Button reads for 30s
         });
 
