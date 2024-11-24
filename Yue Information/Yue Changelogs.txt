@@ -87,7 +87,7 @@ Fixed shop command to automatically generate a daily
     shop pool and add items to User's accounts
 
 Beta.2.7 ()
-
+Added Attack Command
 Increased odds of increased daily yield for each class
     as follows:
         Merchant 20% -> 40%
@@ -141,4 +141,22 @@ Added more items to shop pool:
 	Hajime's Coat
 	Ebony Coat
 	Divine Armor
-    
+
+Beta 2.8 (Nov 2, 2024)
+	Added Legal Command
+	Added Purge Command
+	Added RemoveYue Command (Important Addition)
+	Added Send Command
+	Added Heal Command
+	Added Inventory Command
+	Added Pay Command
+	Changed the Blackjack Help to be more Informative
+	Added Welcome Message Upon Yue Joining a Server so Nobody Uses her Maliciously
+	Updated the Information in the help command
+	Added a Beta Tester Badge (Thank you to all the testers)
+	Added Profile Customization for Beta Testers
+	Added a Gamble Streak
+	Added Trading Functionality into Inventory
+	
+	
+	

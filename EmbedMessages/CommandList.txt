@@ -5,6 +5,9 @@ or YueOS
 :arrows_counterclockwise: **Refresh:** Refresh Yue!
 :thought_balloon: **Suggest:** Make a suggestion
 for Yue!
+📜 **Legal:** View Yue's legal information.
+🗑️ **Purge:** Purge up to 100 messages (Can't purge messages older than 2 weeks).
+🏄‍♀️ **removeYue:** Remove Yue from your server and properly delete your data from her database.
 
 :yellow_heart: YueOS :yellow_heart:
 =============================
@@ -24,11 +27,15 @@ Cost $2000
 🎲 **Roulette:** Play a game of classic Roulette.
 <:spade:1239390979950247966> **Blackjack:** Play a game of 1 deck Blackjack.
 <:Schlag:1241861137826447511> **Attack:** Attack your enemies and steal their money.
+💞 **Heal:** Set your HP to 100 and clear all status effects out of battle for $2500.
+💼 **Inventory:** Bring up your inventory and trading menu!
+💸 **Pay:** Pay another user.
+🛒 **Shop:** Bring up the daily shop.
 
 :closed_lock_with_key: Developer Commands :closed_lock_with_key:
 =============================
 :tools: **Mode:** Change Yue's Mode.
 :money_with_wings: **Give:** Give money to a user.
-:date: **Reset Daily:** Reset daily
-timer (global)
+:date: **Reset Daily:** Reset daily timer (global).
+📨 **Send:** Send a message through Yue to a dm or server channel (Needs destination ID).
 :warning: **Test:** Perform a test.
