@@ -158,5 +158,8 @@ Beta 2.8 (Nov 2, 2024)
 	Added a Gamble Streak
 	Added Trading Functionality into Inventory
 	
-	
+Beta 2.9 (Nov 23, 2024)
+    Buffed Daily Command's Base Collection Value:
+        $100 -> $300
+    Changed the way Daily Command Bonuses are Calculated
 	

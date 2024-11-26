@@ -13,7 +13,7 @@ module.exports = {
         var RandomNumber = getRandomInt(100); // Random number from 1-100
         var Reply = "";
         var Bonus = 0;
-        var daily = 100;
+        var daily = 300;
         if (!interaction.inGuild()) {
           interaction.reply({content: "This command is only for use in servers!", ephemeral: true});
           return;
@@ -30,13 +30,13 @@ module.exports = {
             switch (profile.Class) {
               case "Merchant":
                 if (RandomNumber <= 40) {
-                Bonus = (getRandomInt(50) * 3)+ 50;
+                Bonus = (getRandomInt(50) * 5)+ 50;
                 Reply = " :star: Merchant bonus!";
                 }
                 break;
               case "Adventurer":
                 if (RandomNumber <= 20) {
-                  Bonus = (getRandomInt(25) * 4) + 150;
+                  Bonus = (getRandomInt(25) * 8) + 150;
                   Reply = " :star: Adventurer bonus!";
                 }
                 break;
