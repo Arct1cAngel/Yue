@@ -68,6 +68,10 @@ const Profile = Table.define("Profile", {
         type: Sequelize.INTEGER,
         defaultValue: 0
     },
+    DailyStreak: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+    },
     Inventory: {
         type: Sequelize.STRING,
         defaultValue: ""

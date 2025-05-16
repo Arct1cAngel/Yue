@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cohere-ai": "^7.15.4",
     "discord.js": "^14.15.2",
     "fs": "^0.0.1-security",
     "nodemon": "^3.0.1",

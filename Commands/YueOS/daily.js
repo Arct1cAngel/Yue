@@ -14,11 +14,14 @@ module.exports = {
         var Reply = "";
         var Bonus = 0;
         var daily = 300;
+        var HrsBetweenDates = 0;
+        var Streak;
         if (!interaction.inGuild()) {
           interaction.reply({content: "This command is only for use in servers!", ephemeral: true});
           return;
         }
         await Profile.findByPk(interaction.user.id).then((profile) => {
+          Streak = profile.DailyStreak;
           if (profile.LastDaily == null) {
             var LastDaily = "NoDate";
           } else {
@@ -27,6 +30,8 @@ module.exports = {
           if (LastDaily == new Date().toDateString()) {
             interaction.reply(`You already claimed your daily today! Come back tomorrow to use the command again. (Refreshes at 4:00am GMT)`);
           } else {
+            HrsBetweenDates = Math.floor(Math.abs(new Date() - profile.LastDaily) / 36e5);
+            if (HrsBetweenDates >= 48) Streak = 1; else Streak++;
             switch (profile.Class) {
               case "Merchant":
                 if (RandomNumber <= 40) {
@@ -50,11 +55,13 @@ module.exports = {
             Profile.update(
               {
                 Balance: profile.Balance + daily + Bonus,
-                LastDaily: new Date().toDateString()
+                LastDaily: new Date().toDateString(),
+                DailyStreak: Streak,
               },
               { where: {id: interaction.user.id} }
             );
-            interaction.reply(`Daily Claimed!${Reply} **$${daily + Bonus}** added to your daily paycheque! Your new balance is: __**$${profile.Balance + daily + Bonus}**__`);
+            if (Streak <= profile.DailyStreak) Streak = ":broken_heart:**Daily Streak Broken!**:broken_heart:"; else Streak = `🔥Current Streak: **${Streak}**🔥`;
+            interaction.reply(`Daily Claimed!${Reply} **$${daily + Bonus}** added to your daily paycheque! Your new balance is: __**$${profile.Balance + daily + Bonus}**__\n${Streak}`);
           }
         }).catch(error => {
           interaction.reply(`Could not claim daily. Message Arctic_Angel for assistance.`);
